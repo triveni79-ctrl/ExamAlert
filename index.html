@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ExamAlert - Study Planner</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f4ff;
+      color: #25264a;
+      margin: 0;
+      padding: 30px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #5146c8;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 30px auto;
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px #00000012;
+    }
+
+    .feature {
+      background: #f0efff;
+      margin: 15px 0;
+      padding: 18px;
+      border-radius: 10px;
+    }
+    input, button {
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #d0d0e5;
+      font-size: 15px;
+      max-width: 100%;
+    }
+
+    button {
+      background: #5146c8;
+      color: white;
+      cursor: pointer;
+      border: none;
+    }
+
+    #examList {
+      margin-top: 20px;
+    }
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, #eef2ff, #f5f3ff);
+      color: #25264a;
+      margin: 0;
+      padding: 30px 16px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 38px;
+      color: #5146c8;
+      margin-bottom: 8px;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 30px auto;
+      background: white;
+      padding: 25px;
+      border-radius: 20px;
+      box-shadow: 0 10px 35px #3430a010;
+    }
+
+    .feature {
+      background: #f8f8ff;
+      border: 1px solid #e5e5ff;
+      margin: 20px 0;
+      padding: 22px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px #3430a008;
+    }
+
+    input {
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 360px;
+      margin: 5px;
+      padding: 12px;
+      border: 1px solid #d7d7ef;
+      border-radius: 9px;
+      font-size: 15px;
+    }
+
+    button {
+      background: #5146c8;
+      color: white;
+      padding: 12px 20px;
+      margin: 6px;
+      border: none;
+      border-radius: 9px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #3930a3;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 16px 10px;
+      }
+
+      .container {
+        padding: 15px;
+      }
+
+      h1 {
+        font-size: 30px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <h1>📚 ExamAlert</h1>
+  <p>Your personal exam and study planner</p>
+
+  <div class="container">
+    <h2>Welcome to ExamAlert!</h2><div class="feature">
+      <h2>📅 Add Your Exam</h2>
+
+      <form id="examForm">
+        <input type="text" id="subject"
+          placeholder="Subject name (e.g. Mathematics)" required>
+
+        <br><br>
+
+        <input type="date" id="examDate" required>
+
+        <br><br>
+
+        <input type="time" id="examTime" required>
+
+        <br><br>
+
+        <button type="submit">Add Exam</button>
+      </form>
+
+      <div id="examList"></div>
+      <div class="feature">
+  <h2>✅ Study Progress</h2>
+  <input type="text" id="progressSubject"
+    placeholder="Enter subject name">
+  <button type="button" id="completeBtn">
+    Mark as Completed
+  </button>
+  <p id="progressStatus">No subjects completed yet.</p>
+</div>
+      <div class="feature">
+  <h2>⏳ Exam Countdown</h2>
+  <p id="countdown">Add an exam to see the countdown.</p>
+</div>
+    </div>
+
+    <div class="feature">
+  <h2>⏰ Study Alarm</h2>
+
+  <form id="alarmForm">
+    <input type="text" id="studySubject"
+      placeholder="What subject will you study?" required>
+
+    <br><br>
+
+    <input type="date" id="studyDate" required>
+
+    <br><br>
+
+    <input type="time" id="studyTime" required>
+
+    <br><br>
+
+    <button type="submit">Set Study Alarm</button>
+  </form>
+
+  <p id="alarmStatus">No alarm set yet.</p>
+</div>
+    <div class="feature">
+      <h3>📅 Exam Timetable</h3>
+      <p>Organize your upcoming exams.</p>
+    </div>
+
+    <div class="feature">
+      <h3>⏰ Study Alarm</h3>
+      <p>Get reminders when it's time to study.</p>
+    </div>
+
+    <div class="feature">
+      <h3>🎯 Study Goals</h3>
+      <p>Stay focused and prepare for exams.</p>
+    </div>
+  </div>
+  <script>
+  const examForm = document.getElementById("examForm");
+  const examList = document.getElementById("examList");
+  let exams = JSON.parse(localStorage.getItem("exams")) || [];
+
+function displayExams() {
+  examList.replaceChildren();
+
+  exams.forEach(function(item) {
+    const card = document.createElement("div");
+    card.className = "feature";
+
+    const title = document.createElement("h3");
+    title.textContent = "📘 " + item.subject;
+
+    const details = document.createElement("p");
+    details.textContent =
+      "Exam Date: " + item.date + " | Time: " + item.time;
+
+    card.appendChild(title);
+    card.appendChild(details);
+    examList.appendChild(card);
+  });
+}
+function updateCountdown() {
+  const countdown = document.getElementById("countdown");
+
+  if (exams.length === 0) {
+    countdown.textContent = "Please add an exam first.";
+    return;
+  }
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const upcoming = exams
+    .filter(exam => {
+      const examDay = new Date(exam.date + "T00:00:00");
+      return examDay >= today;
+    })
+    .sort((a, b) => a.date.localeCompare(b.date));
+
+  if (upcoming.length === 0) {
+    countdown.textContent = "No upcoming exams.";
+    return;
+  }
+
+  const nextExam = upcoming[0];
+  const examDay = new Date(nextExam.date + "T00:00:00");
+  const daysLeft = Math.round(
+    (examDay - today) / (1000 * 60 * 60 * 24)
+  );
+
+  countdown.textContent =
+    nextExam.subject + ": " +
+    (daysLeft === 0 ? "Exam is today!" :
+     daysLeft + " days left!");
+}
+
+updateCountdown();
+
+displayExams();
+
+  examForm.addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const subject = document.getElementById("subject").value.trim();
+    const date = document.getElementById("examDate").value;
+    const time = document.getElementById("examTime").value;
+
+    exams.push({ subject, date, time });
+
+localStorage.setItem("exams", JSON.stringify(exams));
+
+displayExams();
+examForm.reset();
+  });
+  const alarmForm = document.getElementById("alarmForm");
+const alarmStatus = document.getElementById("alarmStatus");
+
+let studyAlarm = null;
+let savedAlarm = JSON.parse(
+  localStorage.getItem("studyAlarm")
+);
+
+if (savedAlarm) {
+  document.getElementById("studySubject").value =
+    savedAlarm.subject;
+  document.getElementById("studyDate").value =
+    savedAlarm.date;
+  document.getElementById("studyTime").value =
+    savedAlarm.time;
+
+  alarmStatus.textContent =
+    "Saved alarm: " + savedAlarm.subject +
+    " on " + savedAlarm.date +
+    " at " + savedAlarm.time;
+    const savedDateTime = new Date(
+    savedAlarm.date + "T" + savedAlarm.time
+  );
+
+  if (savedDateTime > new Date()) {
+    if (studyAlarm) clearTimeout(studyAlarm);
+
+    studyAlarm = setTimeout(function() {
+      alarmStatus.textContent =
+        "⏰ Time to study " + savedAlarm.subject + "!";
+
+      if ("Notification" in window &&
+          Notification.permission === "granted") {
+        new Notification("ExamAlert Study Reminder", {
+          body: "It's time to study " + savedAlarm.subject + "!"
+        });
+      } else {
+        alert("⏰ Time to study " + savedAlarm.subject + "!");
+      }
+
+      localStorage.removeItem("studyAlarm");
+    }, savedDateTime.getTime() - Date.now());
+  } else {
+    alarmStatus.textContent =
+      "Saved alarm time has passed. Please set a new alarm.";
+  }
+}
+
+alarmForm.addEventListener("submit", function(event) {
+  event.preventDefault();
+
+  const subject = document.getElementById("studySubject").value.trim();
+  const date = document.getElementById("studyDate").value;
+  const time = document.getElementById("studyTime").value;
+
+  const alarmDate = new Date(date + "T" + time);
+  localStorage.setItem("studyAlarm", JSON.stringify({
+  subject: subject,
+  date: date,
+  time: time
+}));
+
+  if (alarmDate <= new Date()) {
+    alarmStatus.textContent = "Please choose a future date and time.";
+    return;
+  }
+
+  if (studyAlarm) {
+    clearTimeout(studyAlarm);
+  }
+
+  alarmStatus.textContent =
+    "Alarm set for " + subject + " on " + date + " at " + time;
+
+  studyAlarm = setTimeout(function() {
+    alarmStatus.textContent = "⏰ Time to study " + subject + "!";
+
+    if ("Notification" in window) {
+      if (Notification.permission === "granted") {
+        new Notification("ExamAlert Study Reminder", {
+          body: "It's time to study " + subject + "!"
+        });
+      } else {
+        alert("⏰ Time to study " + subject + "!");
+      }
+    } else {
+      alert("⏰ Time to study " + subject + "!");
+    }
+  }, alarmDate.getTime() - Date.now());
+});
+
+if ("Notification" in window &&
+    Notification.permission === "default") {
+  Notification.requestPermission();
+}
+const progressSubject = document.getElementById("progressSubject");
+const completeBtn = document.getElementById("completeBtn");
+const progressStatus = document.getElementById("progressStatus");
+
+let completedSubjects = JSON.parse(
+  localStorage.getItem("completedSubjects") || "[]"
+);
+
+function displayProgress() {
+  if (completedSubjects.length === 0) {
+    progressStatus.textContent = "No subjects completed yet.";
+  } else {
+    progressStatus.textContent =
+      "Completed subjects: " + completedSubjects.join(", ");
+  }
+}
+
+completeBtn.addEventListener("click", function() {
+  const subject = progressSubject.value.trim();
+
+  if (subject === "") {
+    progressStatus.textContent = "Please enter a subject name.";
+    return;
+  }
+
+  if (!completedSubjects.includes(subject)) {
+    completedSubjects.push(subject);
+    localStorage.setItem(
+      "completedSubjects",
+      JSON.stringify(completedSubjects)
+    );
+  }
+
+  displayProgress();
+  progressSubject.value = "";
+});
+
+displayProgress();
+</script>
+</body>
+</html>
